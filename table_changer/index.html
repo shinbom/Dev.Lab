@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<style>
+	#test{font-size:20px; color:red;}
+</style>
+<title>테이블을 자동으로 DIV로 변경하는 Script</title>
+</head>
+
+<body>
+	<table>
+		<caption>제목이라능</caption>
+		<thead>
+			<tr>
+				<th scope="col">제목 1</th>
+				<th scope="col">제목 2</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>테스트</td>
+				<td>테스트</td>
+			</tr>
+		</tbody>
+	</table>
+	<p id="test">test</p>
+	<div class="tc_table">
+		<div class="tc_table_cell">
+			<div class="tc_table_th">
+				테스트
+			</div>
+		</div>
+		<div class="tc_table_cell">
+			<div class="tc_table_th">
+				테스트
+			</div>
+		</div>
+	</div>
+	<style>
+		table{border:1px solid #bebebe; table-layout:fixed; border-collapse:collapse;}
+		th{background-color:#bebebe;}
+
+		.tc_table{display:table;}
+		.tc_caption{display:table-caption;}
+		.tc_thead{display:table-header-group;}
+		.tc_th{display:table-cell;}
+
+
+	</style>
+	<script>
+		'use strict';
+
+		//ECMA 5
+		var tableChanger = function (element) {
+			this.init(element);
+		}
+
+		tableChanger.prototype.init = function (element) {
+			this.el =  document.querySelector(element);
+
+
+			this.modify(this.el);
+		}
+
+		tableChanger.prototype.modify = function () {
+			var tc_table = document.createElement('div');
+			tc_table.classList.add('tc_table');
+			/* Caption이 있는 경우 */
+			if(this.el.caption) {
+				var tc_caption = document.createElement('h3');
+				tc_caption.classList.add('tc_caption');
+				tc_caption.innerText = this.el.caption.innerText;
+				tc_table.appendChild(tc_caption);
+			}
+
+
+			if ( this.el.tHead == null ) {
+				/* tBody만 있을 경우, */
+			} else {
+				/* tHead는 하나만 존재할 수 있다. */
+				var tc_thead = document.createElement('div');
+				tc_thead.classList.add('tc_thead');
+				for (var i = 0; i < this.el.tHead.rows.length; i++) {
+					var tc_th_row = document.createElement('div');					
+					tc_th_row.classList.add('tc_th_row');
+
+					tc_thead.appendChild(tc_th_row);
+					for(var j = 0; j < this.el.tHead.rows[i].cells.length; j++) {
+						var tc_th = document.createElement('div');
+						tc_th.classList.add('tc_th');
+						tc_th.innerText = this.el.tHead.rows[i].cells[j].innerText;
+						tc_th_row.appendChild(tc_th);
+					}
+				}
+				tc_table.appendChild(tc_thead);
+			}
+			document.body.appendChild(tc_table);
+
+		}
+
+		var a = new tableChanger('table');
+		var test = document.getElementById('test');
+
+	</script>
+</body>
+
+</html>
