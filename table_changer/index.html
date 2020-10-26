@@ -49,7 +49,13 @@
 
 	</style>
 	<script>
+		
 		'use strict';
+
+		// 가지고 올 style 
+		/*
+			width, height, padding, fontSize, font-weight, backgroundColor, color
+		*/
 
 		//ECMA 5
 		var tableChanger = function (element) {
@@ -58,12 +64,12 @@
 
 		tableChanger.prototype.init = function (element) {
 			this.el =  document.querySelector(element);
-
-
 			this.modify(this.el);
 		}
 
 		tableChanger.prototype.modify = function () {
+			var self = this;
+			var col_idx = 0;
 			var tc_table = document.createElement('div');
 			tc_table.classList.add('tc_table');
 			/* Caption이 있는 경우 */
@@ -74,6 +80,25 @@
 				tc_table.appendChild(tc_caption);
 			}
 
+			/* Colgroup이 있는 경우, Colgroup내의 col의 width를 구해야 함. */
+			function  getCol() {
+				/* 외부에 있는 변수를 가져옴. */
+				for  (var i = 0; i < self.el.children.length; i++) {
+					if (self.el.children[i].localName == 'colgroup') {
+						/* return 받기 위해 함수 상단에 미리 변수를 선언해 줌. */
+						col_idx = i;
+					}
+				}
+			}
+			getCol();
+
+			/* Colgorup이 있는 경우에 col_idx는 1 이상일때 array에 width값을 받아야 한다. */
+			if (col_idx > 0) {
+				var tc_col_array = [];
+				for (var i = 0; i < this.el.children[col_idx].children.length; i++) {
+					console.log(window.getComputedStyle(this.el.children[col_idx].children[i]));
+				}
+			}
 
 			if ( this.el.tHead == null ) {
 				/* tBody만 있을 경우, */
